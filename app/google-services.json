@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "401983467090",
+    "firebase_url": "https://culturellex.firebaseio.com",
+    "project_id": "culturellex",
+    "storage_bucket": "culturellex.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:401983467090:android:01692276a600582c",
+        "android_client_info": {
+          "package_name": "com.example.jonat.capstonestage1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "401983467090-q4g5p5r05cffj28cl67btn3ldodoic7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jonat.capstonestage1",
+            "certificate_hash": "00BD168FCC922FB8C98FD5461EF39294985EA92A"
+          }
+        },
+        {
+          "client_id": "401983467090-ebtc0albig1fb61185uvodvf7qchpspm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0M77O2cKHyOM509FIKty3VfZ6NadcFfo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "401983467090-ebtc0albig1fb61185uvodvf7qchpspm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

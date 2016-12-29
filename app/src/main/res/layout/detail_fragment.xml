@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context=".details.MovieDetailFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/detail_horizontal_margin"
+            android:paddingRight="@dimen/detail_horizontal_margin">
+
+            <ImageView
+                android:id="@+id/detail_poster"
+                android:layout_width="@dimen/poster_width_for_detail"
+                android:layout_height="@dimen/poster_height_for_detail"
+                android:layout_marginBottom="@dimen/poster_vertical_padding"
+                android:layout_marginRight="@dimen/poster_padding_right"
+                android:scaleType="fitXY" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title_detail"
+                    style="?android:attr/textAppearanceMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/detail_title_bottom_margin"
+                    android:layout_marginLeft="@dimen/detail_title_left_padding"
+                    android:textColor="@color/text_color_detail"
+                    android:textIsSelectable="true"
+                    android:textStyle="bold" />
+                <Button
+                    android:id="@+id/read_more_b"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/button_vertical_margin"
+                    android:enabled="false"
+                    android:text="@string/watch_trailer"
+                    android:theme="@style/Button.ColorPrimary" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/detail_horizontal_margin"
+            android:paddingRight="@dimen/detail_horizontal_margin">
+
+            <TextView
+                android:id="@+id/published"
+                style="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_detail"
+                android:textIsSelectable="true" />
+
+            <TextView
+                android:id="@+id/author_detail"
+                style="?android:attr/textAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/date_vertical_padding"
+                android:textColor="@color/text_color_detail"
+                android:textIsSelectable="true" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/descriptionm"
+            style="?android:attr/textAppearanceMedium"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/detail_horizontal_margin"
+            android:paddingRight="@dimen/detail_horizontal_margin"
+            android:paddingTop="@dimen/movie_overview_padding_top"
+            android:textColor="@color/text_color_detail"
+            android:textSize="@dimen/description_size"
+            android:textIsSelectable="true" />
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#33aebe</color>
+    <color name="colorPrimaryDark">#2b8e99</color>
+    <color name="colorAccent">#ffef3d</color>
+    <color name="white">#ffff</color>
+    <color name="favorite_matte">#f12222</color>
+    <color name="share_matte">#4065cc</color>
+    <color name="dark_grey">#504f4f</color>
+    <color name="medium_grey">#686464</color>
+    <color name="text_color_detail">@android:color/black</color>
+    <color name="text_background">@android:color/black</color>
+
+
+</resources>

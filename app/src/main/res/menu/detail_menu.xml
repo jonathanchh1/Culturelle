@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Activities.GossipDetailActivity">
+
+    <item
+        android:id="@+id/favorite_icon"
+        android:icon="@drawable/ic_favorite_border_black_24dp"
+        android:showAsAction="always"
+        android:title="@string/action_fav"
+        tools:ignore="AppCompatResource">
+    </item>
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="@string/share"
+        android:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
+</menu>
