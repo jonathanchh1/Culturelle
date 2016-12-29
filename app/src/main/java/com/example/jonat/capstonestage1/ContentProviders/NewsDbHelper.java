@@ -31,7 +31,7 @@ import android.util.Log;
                 NewsContract.NewsEntry.COLUMN_DESCRIPTION + " TEXT NOT NULL, " +
                 NewsContract.NewsEntry.COLUMN_URL + "TEXT NOT NULL," +
                 NewsContract.NewsEntry.COLUMN_AUTHOR + " REAL NOT NULL, " +
-                NewsContract.NewsEntry.COLUMN_PUBLISHED + " TEXT NOT NULL, "  +
+                NewsContract.NewsEntry.COLUMN_PUBLISHED + " TEXT NOT NULL "  +
                 "); ";
 
         //gotta do logging

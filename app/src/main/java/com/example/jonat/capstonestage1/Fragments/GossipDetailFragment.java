@@ -1,11 +1,13 @@
 package com.example.jonat.capstonestage1.Fragments;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -119,6 +121,34 @@ public class GossipDetailFragment extends Fragment {
         }
     }
 
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            inflater.inflate(R.menu.detail_menu, menu);
+            Log.d(LOG_TAG, "detail Menu created");
+
+            final MenuItem action_fav = menu.findItem(R.id.favorite_icon);
+            MenuItem action_share = menu.findItem(R.id.action_share);
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(action_share);
+
+            //set  icon on toolbar for favored movies
+            new AsyncTask<Void, Void, Integer>() {
+                @Override
+                protected Integer doInBackground(Void... params) {
+                    return Utility.isFavored(getActivity(), items.getTitle());
+                }
+
+                @Override
+                protected void onPostExecute(Integer isFavored) {
+                    action_fav.setIcon(isFavored == 1 ?
+                            R.drawable.ic_favorite_black_24dp:
+                            R.drawable.ic_favorite_border_black_24dp);
+                }
+            }.execute();
+        }
+
+
+    @TargetApi(Build.VERSION_CODES.CUPCAKE)
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
@@ -204,6 +234,7 @@ public class GossipDetailFragment extends Fragment {
         }
     }
 
+
     private void updateShareActionProvider() {
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
@@ -212,31 +243,7 @@ public class GossipDetailFragment extends Fragment {
         mShareActionProvider.setShareIntent(sharingIntent);
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.detail_menu, menu);
-        if (items != null) {
-            Log.d(LOG_TAG, "detail Menu created");
 
-            final MenuItem action_fav = menu.findItem(R.id.favorite_icon);
-            MenuItem action_share = menu.findItem(R.id.action_share);
-            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(action_share);
 
-            //set  icon on toolbar for favored movies
-            new AsyncTask<Void, Void, Integer>() {
-                @Override
-                protected Integer doInBackground(Void... params) {
-                    return Utility.isFavored(getActivity(), items.getTitle());
-                }
-
-                @Override
-                protected void onPostExecute(Integer isFavored) {
-                    action_fav.setIcon(isFavored == 1 ?
-                            R.drawable.ic_favorite_black_24dp :
-                            R.drawable.ic_favorite_border_black_24dp);
-                }
-            }.execute();
-        }
-     }
     }
 

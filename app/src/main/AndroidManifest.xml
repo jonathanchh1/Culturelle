@@ -23,6 +23,12 @@
         <activity android:name=".Activities.ResetPasswordActivity" />
         <activity android:name=".Activities.LoginActivity" />
         <activity android:name=".Activities.GossipDetailActivity"></activity>
+
+        <provider
+            android:name=".ContentProviders.NewsProvider"
+            android:authorities="com.example.jonat.capstonestage1.ContentProviders;"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>
