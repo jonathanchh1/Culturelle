@@ -59,7 +59,7 @@ public class GossipNewsFragment extends Fragment implements LoaderManager.Loader
     public static final String LOG_TAG = GossipNewsFragment.class.getSimpleName();
     public static final String NEWS_KEY = "news";
     private GossipNewsAdapter mAdapter;
-    private ArrayList<NewsFeed> feedList;
+     ArrayList<NewsFeed> feedList;
     private static final String LATEST = "latest";
     private String sortOrder = LATEST;
     private NewsFeed newsFeed = new NewsFeed();
@@ -112,6 +112,8 @@ public class GossipNewsFragment extends Fragment implements LoaderManager.Loader
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        feedList = new ArrayList<>();
+
     }
 
     @Override
@@ -155,8 +157,6 @@ public class GossipNewsFragment extends Fragment implements LoaderManager.Loader
         if (data.getCount() != 0) {
             feedList.addAll(Utility.returnListFromCursor(data));
             mAdapter.notifyDataSetChanged();
-
-        } else {
         }
     }
 
@@ -235,7 +235,6 @@ public class GossipNewsFragment extends Fragment implements LoaderManager.Loader
         try {
             JSONObject response = new JSONObject(result);
             JSONArray posts = response.optJSONArray("articles");
-            feedList = new ArrayList<>();
 
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
