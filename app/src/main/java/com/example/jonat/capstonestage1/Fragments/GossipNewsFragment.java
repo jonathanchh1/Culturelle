@@ -11,6 +11,10 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,15 +24,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.jonat.capstonestage1.Activities.GossipDetailActivity;
+import com.example.jonat.capstonestage1.Activities.Utility;
 import com.example.jonat.capstonestage1.Adapters.GossipNewsAdapter;
 import com.example.jonat.capstonestage1.BuildConfig;
-import com.example.jonat.capstonestage1.ContentProviders.NewsContract;
+import com.example.jonat.capstonestage1.Data.ArticlesContract;
 import com.example.jonat.capstonestage1.R;
-import com.example.jonat.capstonestage1.model.GossipFeedItems;
+import com.example.jonat.capstonestage1.services.ArticleSyncService;
+import com.example.jonat.capstonestage1.Model.NewsFeed;
+import com.example.jonat.capstonestage1.widget.NewsArticlePreference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,26 +54,21 @@ import java.util.List;
  * Created by jonat on 12/9/2016.
  */
 
-public class GossipNewsFragment extends Fragment {
+public class GossipNewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = GossipNewsFragment.class.getSimpleName();
-    private static final String BOOKS_KEY = "books";
+    public static final String NEWS_KEY = "news";
     private GossipNewsAdapter mAdapter;
-    private ArrayList<GossipFeedItems> feedList;
+    private ArrayList<NewsFeed> feedList;
     private static final String LATEST = "latest";
     private String sortOrder = LATEST;
+    private NewsFeed newsFeed = new NewsFeed();
     private RecyclerView recyclerView;
     private CoordinatorLayout mcoordinatorlayout;
     private ProgressBar mProgressbar;
-    private static final String[] MOVIE_COLUMNS = {
-            NewsContract.NewsEntry._ID,
-            NewsContract.NewsEntry.COLUMN_NEWS_TITLE,
-            NewsContract.NewsEntry.COLUMN_AUTHOR,
-            NewsContract.NewsEntry.COLUMN_DESCRIPTION,
-            NewsContract.NewsEntry.COLUMN_POSTER_PATH,
-            NewsContract.NewsEntry.COLUMN_URL,
-            NewsContract.NewsEntry.COLUMN_PUBLISHED,
-    };
+
+
+
 
     @Nullable
     @Override
@@ -74,30 +77,95 @@ public class GossipNewsFragment extends Fragment {
         View rootView = inflater.inflate(
                 R.layout.recyclerview, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.mrecyclerView);
+        ArticleSyncService.initialize(getContext());
+        ArticleSyncService.syncImmediately(getContext());
+        getLoaderManager().initLoader(0, null, this);
+        recyclerView =  (RecyclerView) rootView.findViewById(R.id.mrecyclerView);
         recyclerView.setHasFixedSize(true);
+
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),
                 getResources().getInteger(R.integer.grid_column)));
         mProgressbar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
         mcoordinatorlayout = (CoordinatorLayout) rootView.findViewById(R.id.main_content);
-        updateNews(sortOrder);
 
-        return  rootView;
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(LATEST)) {
+                sortOrder = savedInstanceState.getString(LATEST);
+            }
+
+            if (savedInstanceState.containsKey(NEWS_KEY)) {
+                feedList = savedInstanceState.getParcelableArrayList(NEWS_KEY);
+                mAdapter.setData(feedList);
+            } else {
+                updateNews(sortOrder);
+            }
+        } else {
+            updateNews(sortOrder);
+        }
+
+        return rootView;
 
     }
 
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (!sortOrder.contentEquals(LATEST)) {
+            outState.putString(NEWS_KEY, sortOrder);
+        }
+        if (newsFeed != null) {
+            outState.putParcelableArrayList(LATEST, feedList);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
     private void updateNews(String choice) {
-        if (isNetworkAvailable(getActivity())) {
-            new DownloadTask().execute(choice);
+        if (!choice.isEmpty()) {
+            if (isNetworkAvailable(getContext())) {
+                new DownloadTask().execute(choice);
+                //onRefresh();
+                getLoaderManager().restartLoader(0, null, this);
+            }
         } else {
             Snackbar.make(mcoordinatorlayout, getString(R.string.noNetwork), Snackbar.LENGTH_SHORT).show();
         }
     }
 
+
+
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String selection = ArticlesContract.ArticleEntry.COLUMN_SOURCE + "=?";
+        String[] selectionArgs = {new NewsArticlePreference(getContext()).getSourceValue()};
+
+        return new CursorLoader(getActivity(),
+                ArticlesContract.ArticleEntry.CONTENT_URI,
+                ArticlesContract.ArticleEntry.ARTICLE_COLUMNS,
+                selection, selectionArgs, ArticlesContract.ArticleEntry.DEFAULT_SORT);
     }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (data.getCount() != 0) {
+            feedList.addAll(Utility.returnListFromCursor(data));
+            mAdapter.notifyDataSetChanged();
+
+        } else {
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // clear data set
+        clearDataSet();
+    }
+
 
     public class DownloadTask extends AsyncTask<String, Void, Integer> implements GossipNewsAdapter.Callbacks {
 
@@ -117,7 +185,8 @@ public class GossipNewsFragment extends Fragment {
             HttpURLConnection urlConnection;
             try {
                 String choice = params[0];
-                URL url = new URL("https://newsapi.org/v1/articles?source=mtv-news&sortBy=" + choice + "&apiKey=" +
+                URL url = new URL("https://newsapi.org/v1/articles?source=mtv-news" +
+                        "&sortBy=" + choice + "&apiKey=" +
                 BuildConfig.NEWS_API);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 int statusCode = urlConnection.getResponseCode();
@@ -148,21 +217,20 @@ public class GossipNewsFragment extends Fragment {
                 mAdapter = new GossipNewsAdapter(getActivity(),
                         feedList, this);
                 recyclerView.setAdapter(mAdapter);
-                ;
-            } else {
-                Toast.makeText(getActivity(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }
         }
 
+
+
         @Override
-        public void onTaskCompleted(GossipFeedItems items, int position) {
+        public void onTaskCompleted(NewsFeed items, int position) {
             Intent intent = new Intent(getActivity(), GossipDetailActivity.class);
             intent.putExtra(GossipDetailActivity.ARG_NEWS, items);
             startActivity(intent);
 
         }
-    }
 
+    }
     private void parseResult(String result) {
         try {
             JSONObject response = new JSONObject(result);
@@ -171,7 +239,7 @@ public class GossipNewsFragment extends Fragment {
 
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
-                GossipFeedItems item = new GossipFeedItems();
+                NewsFeed item = new NewsFeed();
                 item.setTitle(post.optString("title"));
                 item.setThumbnail(post.optString("urlToImage"));
                 item.setmPublish(post.optString("publishedAt"));
@@ -183,60 +251,6 @@ public class GossipNewsFragment extends Fragment {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-    }
-    public static class FetchFav extends AsyncTask<String, Void, List<GossipFeedItems>> {
-        private Callbacks mCallbacks;
-
-        private Context mContext;
-
-
-        public FetchFav(Callbacks callbacks){
-            this.mCallbacks = callbacks;
-        }
-        //constructor
-        public FetchFav(Context context) {
-            mContext = context;
-
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected List<GossipFeedItems> doInBackground(String... params) {
-            Cursor cursor = mContext.getContentResolver().query(
-                    NewsContract.NewsEntry.CONTENT_URI,
-                    MOVIE_COLUMNS,
-                    null,
-                    null,
-                    null
-            );
-
-            return getFavMoviesFromCursor(cursor);
-        }
-
-        @Override
-        protected void onPostExecute(List<GossipFeedItems> items) {
-            //we got Fav movies so let's show them
-            if (items != null) {
-                mCallbacks.onTaskCompleted(items);
-            }
-        }
-
-        private List<GossipFeedItems> getFavMoviesFromCursor(Cursor cursor) {
-            List<GossipFeedItems> results = new ArrayList<>();
-            //if we have data in database for Fav. movies.
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    GossipFeedItems items = new GossipFeedItems(cursor);
-                    results.add(items);
-                } while (cursor.moveToNext());
-                cursor.close();
-            }
-            return results;
         }
     }
 
@@ -257,6 +271,13 @@ public class GossipNewsFragment extends Fragment {
 
     }
 
+    private void clearDataSet() {
+        if (feedList != null) {
+            feedList.clear();
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
     private boolean isNetworkAvailable(Context context) {
             ConnectivityManager connectivityManager =
                     (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -268,7 +289,7 @@ public class GossipNewsFragment extends Fragment {
         }
 
         public interface Callbacks{
-            void onTaskCompleted(List<GossipFeedItems> items);
+            void onTaskCompleted(List<NewsFeed> items);
         }
     }
 

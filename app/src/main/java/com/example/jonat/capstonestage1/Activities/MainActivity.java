@@ -1,10 +1,12 @@
 package com.example.jonat.capstonestage1.Activities;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -19,43 +21,59 @@ import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.jonat.capstonestage1.Adapters.GossipNewsAdapter;
 import com.example.jonat.capstonestage1.Adapters.TabAdapter;
 import com.example.jonat.capstonestage1.Fragments.GamesFragment;
+import com.example.jonat.capstonestage1.Fragments.GossipDetailFragment;
 import com.example.jonat.capstonestage1.Fragments.GossipNewsFragment;
 import com.example.jonat.capstonestage1.Fragments.NewsFragment;
 import com.example.jonat.capstonestage1.Fragments.TechFragment;
+import com.example.jonat.capstonestage1.Model.Comment;
+import com.example.jonat.capstonestage1.Model.User;
 import com.example.jonat.capstonestage1.R;
-import com.example.jonat.capstonestage1.model.GossipFeedItems;
+import com.example.jonat.capstonestage1.Model.NewsFeed;
+import com.google.android.gms.appinvite.AppInvite;
+import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.appinvite.AppInviteInvitationResult;
+import com.google.android.gms.appinvite.AppInviteReferral;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.example.jonat.capstonestage1.R.id.action_share;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GossipNewsAdapter.Callbacks {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private ShareActionProvider mShareActionProvider;
-
     TabAdapter mTabAdapter;
-    GossipFeedItems items = new GossipFeedItems();
+    GoogleApiClient mGoogleApiClient;
+    NewsFeed items = new NewsFeed();
+    private static final int REQUEST_INVITE = 1;
     DrawerLayout mDrawlayout;
-    private List<GossipFeedItems> feedList;
-    GossipNewsAdapter mAdapter;
     private FirebaseAuth mAuth;
+    CoordinatorLayout mCoordinatorLayout;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-   final int[] TabsIcon = new int[]{
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private FragmentManager fragmentManager = getFragmentManager();
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
+    private boolean mTwoPane;
+
+    final int[] TabsIcon = new int[]{
             R.drawable.ic_library_books_black_24dp,
             R.drawable.ic_bubble_chart_black_24dp,
             R.drawable.ic_videogame_asset_black_24dp,
-           R.drawable.ic_computer_black_24dp
+            R.drawable.ic_computer_black_24dp
     };
 
     @Override
@@ -65,9 +83,25 @@ public class MainActivity extends AppCompatActivity {
 
         //Adding Toolbar to Main screen
         mAuth = FirebaseAuth.getInstance();
-
+        // Initialize Firebase Measurement.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        if (findViewById(R.id.news_detail_container) != null) {
+
+            mTwoPane = true;
+
+            if (savedInstanceState == null) {
+                fragmentManager.beginTransaction()
+                        .add(R.id.news_detail_container, new GossipDetailFragment(), DETAILFRAGMENT_TAG)
+                        .commit();
+            }
+        } else {
+            mTwoPane = false;
+        }
 
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         setupWithViewPager(viewPager);
@@ -76,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
         TabLayout mTabs = (TabLayout) findViewById(R.id.tabs);
         mTabs.setupWithViewPager(viewPager);
 
-
-        if(TabsIcon.length > 0) {
+        //set icon tabs
+        if (TabsIcon.length > 0) {
             mTabs.getTabAt(0).setIcon(TabsIcon[0]);
             mTabs.getTabAt(1).setIcon(TabsIcon[1]);
             mTabs.getTabAt(2).setIcon(TabsIcon[2]);
@@ -86,10 +120,9 @@ public class MainActivity extends AppCompatActivity {
         //Create navigation drawer and inflate layout
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         mDrawlayout = (DrawerLayout) findViewById(R.id.drawer);
-
         //Adding menu icon to Toolbar;
         ActionBar supportActionBar = getSupportActionBar();
-        if(supportActionBar != null ){
+        if (supportActionBar != null) {
             VectorDrawableCompat indicator = VectorDrawableCompat.create(getResources(), R.drawable.ic_menu_black_24dp, getTheme());
             indicator.setTint(ResourcesCompat.getColor(getResources(), R.color.white, getTheme()));
             supportActionBar.setHomeAsUpIndicator(indicator);
@@ -100,26 +133,20 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 //Set item in checked state
-                int id  = item.getItemId();
-                switch (id){
-                    case R.id.favorites:
-                        Log.d(LOG_TAG, "favorite");
-                        GossipNewsFragment.FetchFav fetchFav =
-                                new GossipNewsFragment.FetchFav(new GossipNewsFragment.Callbacks() {
-                                    @Override
-                                    public void onTaskCompleted(List<GossipFeedItems> items) {
-                                        if (items != null) {
-                                        if (mAdapter != null) {
-                                            mAdapter.updateList(items);
-                                        }
-                                        feedList = new ArrayList<>();
-                                        feedList.addAll(items);
-                                    }
-                                    }
-                                });
-                        fetchFav.execute();
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.invite_menu:
+                        sendInvitation();
+                        return true;
+
+                    case R.id.logout:
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        finish();
+                        item.setChecked(true);
+                        break;
                 }
-                item.setChecked(true);
+
 
                 //Closing drawer on ItemClick
                 mDrawlayout.closeDrawers();
@@ -150,9 +177,79 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        // Create an auto-managed GoogleApiClient with access to App Invites.
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(AppInvite.API)
+                .enableAutoManage(this, this)
+                .build();
 
 
+
+
+
+        // Check for App Invite invitations and launch deep-link activity if possible.
+        // Requires that an Activity is registered in AndroidManifest.xml to handle
+        // deep-link URLs.
+        boolean autoLaunchDeepLink = true;
+        AppInvite.AppInviteApi.getInvitation(mGoogleApiClient, this, autoLaunchDeepLink)
+                .setResultCallback(
+                        new ResultCallback<AppInviteInvitationResult>() {
+                            @Override
+                            public void onResult(AppInviteInvitationResult result) {
+                                Log.d(LOG_TAG, "getInvitation:onResult:" + result.getStatus());
+                                if (result.getStatus().isSuccess()) {
+                                    // Extract information from the intent
+                                    Intent intent = result.getInvitationIntent();
+                                    String deepLink = AppInviteReferral.getDeepLink(intent);
+                                    String invitationId = AppInviteReferral.getInvitationId(intent);
+
+                                    // Because autoLaunchDeepLink = true we don't have to do anything
+                                    // here, but we could set that to false and manually choose
+                                    // an Activity to launch to handle the deep link here.
+                                    // ...
+                                }
+                            }
+                        });
     }
+
+
+    @Override
+    protected void onActivityResult ( int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(LOG_TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Use Firebase Measurement to log that invitation was sent.
+                Bundle payload = new Bundle();
+                payload.putString(FirebaseAnalytics.Param.VALUE, "inv_sent");
+
+                // Check how many invitations were sent and log.
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                Log.d(LOG_TAG, "Invitations sent: " + ids.length);
+            } else {
+                // Use Firebase Measurement to log that invitation was not sent
+                Bundle payload = new Bundle();
+                payload.putString(FirebaseAnalytics.Param.VALUE, "inv_not_sent");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SHARE, payload);
+
+                // Sending failed or it was canceled, show failure message to the user
+                Log.d(LOG_TAG, "Failed to send invitation.");
+            }
+        }
+    }
+
+
+
+    private void sendInvitation(){
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setCallToActionText(getString(R.string.invitation_cta))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+
 
     private void setupWithViewPager(ViewPager viewPager) {
         mTabAdapter = new TabAdapter(getSupportFragmentManager());
@@ -172,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void updateShareActionProvider(GossipFeedItems items) {
+    private void updateShareActionProvider(NewsFeed items) {
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(Intent.EXTRA_SUBJECT, items.getTitle());
@@ -196,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthStateListener);
+        mGoogleApiClient.connect();
     }
 
 
@@ -205,5 +303,44 @@ public class MainActivity extends AppCompatActivity {
         if(mAuthStateListener != null){
             mAuth.removeAuthStateListener(mAuthStateListener);
         }
+        if(mGoogleApiClient.isConnected()){
+            mGoogleApiClient.disconnect();
+        }
     }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onTaskCompleted(NewsFeed items, int position) {
+        if (mTwoPane) {
+            Bundle args = new Bundle();
+            args.putParcelable(GossipDetailActivity.ARG_NEWS, items);
+
+            GossipDetailFragment fragment = new GossipDetailFragment();
+            fragment.setArguments(args);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.news_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+        } else {
+            Intent intent = new Intent(getApplicationContext(), GossipDetailActivity.class);
+            intent.putExtra(GossipDetailActivity.ARG_NEWS, items);
+            startActivity(intent);
+        }
+    }
+
+
 }

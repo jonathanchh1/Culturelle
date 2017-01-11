@@ -1,6 +1,7 @@
 package com.example.jonat.capstonestage1.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -18,12 +19,11 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.jonat.capstonestage1.Activities.GossipDetailActivity;
 import com.example.jonat.capstonestage1.Adapters.GamesAdapter;
-import com.example.jonat.capstonestage1.Adapters.GossipNewsAdapter;
 import com.example.jonat.capstonestage1.BuildConfig;
 import com.example.jonat.capstonestage1.R;
-import com.example.jonat.capstonestage1.model.GamesItems;
-import com.example.jonat.capstonestage1.model.GossipFeedItems;
+import com.example.jonat.capstonestage1.Model.NewsFeed;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +45,7 @@ public class GamesFragment extends Fragment {
 
         private static final String BOOKS_KEY = "books";
         private GamesAdapter mAdapter;
-        private ArrayList<GamesItems> feedList;
+        private ArrayList<NewsFeed> feedList;
         private static final String TOP = "top";
         private String sortOrder = TOP;
         private RecyclerView recyclerView;
@@ -79,7 +79,7 @@ public class GamesFragment extends Fragment {
             }
         }
 
-        public class DownloadTask extends AsyncTask<String, Void, Integer> {
+        public class DownloadTask extends AsyncTask<String, Void, Integer> implements GamesAdapter.Callbacks {
 
 
             @Override
@@ -127,12 +127,19 @@ public class GamesFragment extends Fragment {
                 progressBar.setVisibility(View.GONE);
 
                 if (result == 1) {
-                    mAdapter = new GamesAdapter(getContext(), feedList);
+                    mAdapter = new GamesAdapter(getContext(), feedList, this);
                     recyclerView.setAdapter(mAdapter);
                     ;
                 } else {
                     Toast.makeText(getActivity(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
                 }
+            }
+
+            @Override
+            public void onTaskCompleted(NewsFeed items, int position) {
+                Intent intent = new Intent(getActivity(), GossipDetailActivity.class);
+                intent.putExtra(GossipDetailActivity.ARG_NEWS, items);
+                startActivity(intent);
             }
         }
 
@@ -144,13 +151,13 @@ public class GamesFragment extends Fragment {
 
                 for (int i = 0; i < posts.length(); i++) {
                     JSONObject post = posts.optJSONObject(i);
-                    GamesItems item = new GamesItems();
+                    NewsFeed item = new NewsFeed();
                     item.setTitle(post.optString("title"));
                     item.setThumbnail(post.optString("urlToImage"));
-                    item.setAuthor("author");
-                    item.setUrl("url");
-                    item.setmPublish("publishedAt");
-                    item.setDescription("description");
+                    item.setmPublish(post.optString("publishedAt"));
+                    item.setUrl(post.optString("url"));
+                    item.setAuthor(post.optString("author"));
+                    item.setDescription(post.optString("description"));
 
                     feedList.add(item);
                 }

@@ -1,27 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/nav_header_height"
-    android:background="@drawable/e"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/a"
     android:orientation="vertical"
     android:padding="@dimen/keyline">
 
-    <com.example.jonat.capstonestage1.Activities.circularprofileimage
-        android:id="@+id/profileImage"
-        android:layout_width="@dimen/profile_size"
-        android:layout_height="@dimen/profile_size"
-        android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/margin_profile_top"
-        android:layout_marginTop="@dimen/margin_profile_bottom"
-        android:contentDescription="@string/profile"
-        android:background="@drawable/ic_add_a_photo_black_24dp"
-        android:padding="@dimen/keyline"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="@dimen/nav_name"
-        android:text="john doe"
-        android:textColor="@android:color/white"/>
-</LinearLayout>
+        <TextView
+            android:id="@+id/name_profile"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="70dp"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_title"
+            android:text="@string/app_name"/>
+</RelativeLayout>

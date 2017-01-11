@@ -1,71 +1,59 @@
-package com.example.jonat.capstonestage1.model;
+package com.example.jonat.capstonestage1.Model;
 
-import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.example.jonat.capstonestage1.ContentProviders.NewsContract;
-import com.google.firebase.database.Exclude;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by jonat on 12/20/2016.
  */
 
-public class GossipFeedItems implements Parcelable{
+public class NewsFeed implements Parcelable{
+    private int id;
     private String title;
     private String thumbnail;
     private String author;
     private String description;
     private String url;
     private String mPublish;
+    private String source;
 
 
-    public GossipFeedItems() {
-
-    }
-
-    public static final int COL_ID = 0;
-    public static final int COL_NEWS_TITLE = 1;
-    public static final int COL_POSTER_PATH = 2;
-    public static final int COL_AUTHOR = 3;
-    public static final int COL_DESCRIPTION = 4;
-    public static final int COL_URL = 5;
-    public static final int COL_PULISHED= 6;
-
-
-
-    public GossipFeedItems(Parcel in) {
+    public NewsFeed(Parcel in) {
+        id = in.readInt();
         title = in.readString();
         thumbnail = in.readString();
         author = in.readString();
         description = in.readString();
         url = in.readString();
         mPublish = in.readString();
+        source = in.readString();
     }
 
-    public GossipFeedItems(Cursor cursor){
-        this.title = cursor.getString(COL_NEWS_TITLE);
-        this.thumbnail = cursor.getString(COL_POSTER_PATH);
-        this.author = cursor.getString(COL_AUTHOR);
-        this.description = cursor.getString(COL_DESCRIPTION);
-        this.url = cursor.getString(COL_URL);
-        this.mPublish = cursor.getString(COL_PULISHED);
 
-    }
-    public static final Creator<GossipFeedItems> CREATOR = new Creator<GossipFeedItems>() {
+
+    public static final Creator<NewsFeed> CREATOR = new Creator<NewsFeed>() {
         @Override
-        public GossipFeedItems createFromParcel(Parcel in) {
-            return new GossipFeedItems(in);
+        public NewsFeed createFromParcel(Parcel in) {
+            return new NewsFeed(in);
         }
 
         @Override
-        public GossipFeedItems[] newArray(int size) {
-            return new GossipFeedItems[size];
+        public NewsFeed[] newArray(int size) {
+            return new NewsFeed[size];
         }
     };
+
+    public NewsFeed() {
+
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getSource() {
+        return source;
+    }
 
     public String getTitle() {
         return title;
@@ -85,6 +73,14 @@ public class GossipFeedItems implements Parcelable{
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setAuthor(String author) {
@@ -122,11 +118,13 @@ public class GossipFeedItems implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(thumbnail);
         dest.writeString(author);
         dest.writeString(description);
         dest.writeString(url);
         dest.writeString(mPublish);
+        dest.writeString(source);
     }
 }

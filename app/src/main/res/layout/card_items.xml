@@ -27,13 +27,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/thumbnail"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
             android:maxLines="3"
             android:padding="8dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="#444"
             android:textSize="18dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:background="@color/colorlight"/>
 
 
     </RelativeLayout>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Capstone Stage 1</string>
+    <string name="app_name">Culturelle</string>
     <string name="email">Email</string>
     <string name="textEmail">textEmailAddress</string>
     <string name="hint_password">Password</string>
@@ -46,4 +46,17 @@
     <string name="share">share</string>
     <string name="remove_favorite">item removed from favorite</string>
     <string name="added_to_favorites">favorites added!</string>
+    <string name="Signout">you are signed out.</string>
+    <string name="star">star</string>
+    <string name="removed_from_favorites">removed from favorites</string>
+    <string name="invitation_message">enjoy culturelle</string>
+    <string name="invitation_cta">Discover Culturelle!</string>
+    <string name="invitation_title">Read about Culturelle</string>
+    <string name="invite">invite</string>
+    <string name="body">comment</string>
+    <string name="full_name">jane doe</string>
+    <string name="name">Name</string>
+    <string name="rational_image_perm">photo</string>
+    <string name="upload">upload avatar</string>
+    <string name="unavailable">no connection</string>
 </resources>

@@ -1,6 +1,8 @@
 package com.example.jonat.capstonestage1.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -9,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,12 +22,12 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.jonat.capstonestage1.Adapters.GossipNewsAdapter;
+import com.example.jonat.capstonestage1.Activities.GossipDetailActivity;
 import com.example.jonat.capstonestage1.Adapters.WorldNewsAdapter;
 import com.example.jonat.capstonestage1.BuildConfig;
 import com.example.jonat.capstonestage1.R;
-import com.example.jonat.capstonestage1.model.GossipFeedItems;
-import com.example.jonat.capstonestage1.model.WorldNewsItems;
+import com.example.jonat.capstonestage1.services.ArticleSyncService;
+import com.example.jonat.capstonestage1.Model.NewsFeed;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,10 +43,10 @@ import java.util.ArrayList;
  * Created by jonat on 12/9/2016.
  */
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final String LOG_TAG = NewsFragment.class.getSimpleName();
-    private ArrayList<WorldNewsItems> feedList;
+    private ArrayList<NewsFeed> feedList;
     private WorldNewsAdapter mAdapter;
     RecyclerView mRecyclerView;
     private static final String LATEST = "latest";
@@ -57,6 +61,8 @@ public class NewsFragment extends Fragment {
           View rootView = inflater.inflate(
                 R.layout.recyclerview, container, false);
 
+        ArticleSyncService.initialize(getContext());
+        getLoaderManager().initLoader(0, null, this);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.mrecyclerView);
         mcoordinatorlayout = (CoordinatorLayout) rootView.findViewById(R.id.main_content);
         mProgressbar = (ProgressBar) rootView.findViewById(R.id.progress_bar);
@@ -78,7 +84,22 @@ public class NewsFragment extends Fragment {
         }
     }
 
-    public class DownloadTask extends AsyncTask<String, Void, Integer> {
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
+
+    public class DownloadTask extends AsyncTask<String, Void, Integer> implements WorldNewsAdapter.Callbacks {
 
         @Override
         protected void onPreExecute() {
@@ -124,12 +145,19 @@ public class NewsFragment extends Fragment {
 
             mProgressbar.setVisibility(View.GONE);
             if (result == 1) {
-                mAdapter = new WorldNewsAdapter(getContext(), feedList);
+                mAdapter = new WorldNewsAdapter(getContext(), feedList, this);
                 mRecyclerView.setAdapter(mAdapter);
                 ;
             } else {
                 Toast.makeText(getActivity(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
             }
+        }
+
+        @Override
+        public void onTaskCompleted(NewsFeed items, int position) {
+            Intent intent = new Intent(getActivity(), GossipDetailActivity.class);
+            intent.putExtra(GossipDetailActivity.ARG_NEWS, items);
+            startActivity(intent);
         }
     }
     private void parseResult(String result) {
@@ -140,13 +168,13 @@ public class NewsFragment extends Fragment {
 
             for (int i = 0; i < posts.length(); i++) {
                 JSONObject post = posts.optJSONObject(i);
-                WorldNewsItems item = new WorldNewsItems();
+                NewsFeed item = new NewsFeed();
                 item.setTitle(post.optString("title"));
-                item.setUrl("url");
-                item.setmPublish("publishedAt");
                 item.setThumbnail(post.optString("urlToImage"));
-                item.setAuthor("author");
-                item.setDescription("description");
+                item.setmPublish(post.optString("publishedAt"));
+                item.setUrl(post.optString("url"));
+                item.setAuthor(post.optString("author"));
+                item.setDescription(post.optString("description"));
 
                 feedList.add(item);
             }
