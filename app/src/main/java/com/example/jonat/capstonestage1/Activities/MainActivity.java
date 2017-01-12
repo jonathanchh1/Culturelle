@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseAnalytics mFirebaseAnalytics;
     private FragmentManager fragmentManager = getFragmentManager();
-    private static final String DETAILFRAGMENT_TAG = "DFTAG";
 
     private boolean mTwoPane;
 
@@ -96,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
             if (savedInstanceState == null) {
                 fragmentManager.beginTransaction()
-                        .add(R.id.news_detail_container, new GossipDetailFragment(), DETAILFRAGMENT_TAG)
+                        .add(R.id.news_detail_container, new GossipDetailFragment(), GossipDetailActivity.ARG_NEWS)
                         .commit();
             }
         } else {
@@ -333,7 +332,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             fragment.setArguments(args);
 
             fragmentManager.beginTransaction()
-                    .replace(R.id.news_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .replace(R.id.news_detail_container, fragment, GossipDetailActivity.ARG_NEWS)
                     .commit();
         } else {
             Intent intent = new Intent(getApplicationContext(), GossipDetailActivity.class);

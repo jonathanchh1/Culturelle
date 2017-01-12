@@ -42,6 +42,7 @@
     <dimen name="min_widget_width">250dp</dimen>
     <dimen name="min_widget_list_height">180dp</dimen>
     <dimen name="margin_name">70dp</dimen>
+    <dimen name="margin_multi">125dp</dimen>
 
 
 </resources>

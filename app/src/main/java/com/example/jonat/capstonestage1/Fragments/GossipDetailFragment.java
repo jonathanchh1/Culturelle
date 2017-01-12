@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +31,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by jonat on 12/23/2016.
@@ -39,17 +45,28 @@ import java.util.ArrayList;
 public class GossipDetailFragment extends Fragment {
 
     public static final String LOG_TAG = GossipDetailFragment.class.getSimpleName();
-    private TextView mTitle, mAuthor, Description, published;
-    private ImageView thumbnail;
     private NewsFeed items;
     private ArrayList<NewsFeed> newsList;
     private Toast mToast;
-    private View rootView;
+    View rootView;
     private MenuItem favorite;
     private LayoutInflater mLayoutInflater;
-    private Button mbuttonList;
     ShareActionProvider mShareActionProvider;
     private DatabaseReference mDatabase;
+
+    @Bind(R.id.title_detail)
+    TextView mTitle;
+    @Bind(R.id.author_detail)
+    TextView mAuthor;
+    @Bind(R.id.detail_poster)
+    ImageView thumbnail;
+    @Bind(R.id.descriptionm)
+    TextView Description;
+    @Bind(R.id.published)
+    TextView published;
+    @Bind(R.id.read_more_b)
+    Button mbuttonList;
+
 
     public GossipDetailFragment() {
         setHasOptionsMenu(true);
@@ -83,36 +100,34 @@ public class GossipDetailFragment extends Fragment {
         Intent intent = getActivity().getIntent();
 
         if (arguments != null || intent != null && intent.hasExtra(GossipDetailActivity.ARG_NEWS)) {
+
             rootView = mLayoutInflater.inflate(R.layout.detail_fragment, container, false);
             if (arguments != null) {
                 items = getArguments().getParcelable(GossipDetailActivity.ARG_NEWS);
             } else {
                 items = intent.getParcelableExtra(GossipDetailActivity.ARG_NEWS);
             }
+
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            ButterKnife.bind(this, rootView);
+
+            mTitle.setText(items.getTitle());
+            mAuthor.setText(items.getAuthor());
+            Description.setText(items.getDescription());
+            published.setText(items.getmPublish());
+
+            mbuttonList.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(items.getUrl())));
+                }
+            });
+
+            mbuttonList.setEnabled(!items.getUrl().isEmpty());
+
+            DisplayInfo(rootView);
         }
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        mAuthor = (TextView) rootView.findViewById(R.id.author_detail);
-        mTitle = (TextView) rootView.findViewById(R.id.title_detail);
-        thumbnail = (ImageView) rootView.findViewById(R.id.detail_poster);
-        Description = (TextView) rootView.findViewById(R.id.descriptionm);
-        published = (TextView) rootView.findViewById(R.id.published);
-        mbuttonList = (Button) rootView.findViewById(R.id.read_more_b);
-
-
-        mTitle.setText(items.getTitle());
-        mAuthor.setText(items.getAuthor());
-        Description.setText(items.getDescription());
-        published.setText(items.getmPublish());
-
-        mbuttonList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(items.getUrl())));
-            }
-        });
-
-        mbuttonList.setEnabled(!items.getUrl().isEmpty());
-        DisplayInfo(rootView);
         return rootView;
     }
 
@@ -121,6 +136,8 @@ public class GossipDetailFragment extends Fragment {
             String posterUrl = items.getThumbnail();
             Picasso.with(getActivity()).load(posterUrl).into(thumbnail);
         }
+
+
     }
 
 
