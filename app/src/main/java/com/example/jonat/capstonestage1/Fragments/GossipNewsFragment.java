@@ -156,7 +156,6 @@ public class GossipNewsFragment extends Fragment implements LoaderManager.Loader
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.getCount() != 0) {
             feedList.addAll(Utility.returnListFromCursor(data));
-            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -212,8 +211,8 @@ public class GossipNewsFragment extends Fragment implements LoaderManager.Loader
 
         @Override
         protected void onPostExecute(Integer result) {
-            mProgressbar.setVisibility(View.GONE);
-            if (result == 1) {
+                mProgressbar.setVisibility(View.GONE);
+                if (result == 1) {
                 mAdapter = new GossipNewsAdapter(getActivity(),
                         feedList, this);
                 recyclerView.setAdapter(mAdapter);
