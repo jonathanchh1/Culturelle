@@ -7,7 +7,7 @@ The NewsApi.org was used to create a vibrant Live News Feed UI that delivers Gos
 and User Friendly manner. I used content provider for persistent data and Sync Adapter to update the data on the wedget continously 
 and A Loader Manager to update the UI.
 
-![screenshot2](https://cloud.githubusercontent.com/assets/18495900/21952971/6e41c5c4-d9f9-11e6-97a8-af4cedfdc3bb.png)![screenshot3](https://cloud.githubusercontent.com/assets/18495900/21952970/6e41024c-d9f9-11e6-8877-997f3935b496.png) 
+![screenshot2](https://cloud.githubusercontent.com/assets/18495900/21952971/6e41c5c4-d9f9-11e6-97a8-af4cedfdc3bb.png)   ![screenshot3](https://cloud.githubusercontent.com/assets/18495900/21952970/6e41024c-d9f9-11e6-8877-997f3935b496.png) 
 
 ![screenshot4](https://cloud.githubusercontent.com/assets/18495900/21952972/6e42c44c-d9f9-11e6-96de-089d6b0c4b99.png)
 
