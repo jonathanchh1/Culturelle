@@ -19,7 +19,7 @@ public class GossipDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         mToolbar= (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(mToolbar);
-        //commit/
+        //commit nowd
 
         if(savedInstanceState == null){
             fragmentManager.beginTransaction()
