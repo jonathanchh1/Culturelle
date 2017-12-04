@@ -43,6 +43,10 @@
     <dimen name="min_widget_list_height">180dp</dimen>
     <dimen name="margin_name">70dp</dimen>
     <dimen name="margin_multi">125dp</dimen>
+    <dimen name="icon">30dp</dimen>
+    <dimen name="loginm">20dp</dimen>
+    <dimen name="passcode">10dp</dimen>
+    <dimen name="widget">4dp</dimen>
 
 
 </resources>

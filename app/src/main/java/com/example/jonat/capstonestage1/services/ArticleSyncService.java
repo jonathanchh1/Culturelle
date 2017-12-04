@@ -119,7 +119,6 @@ public final class ArticleSyncService {
 
 
     public static synchronized void initialize(final Context context) {
-
         schedulePeriodic(context);
         syncImmediately(context);
 

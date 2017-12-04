@@ -73,9 +73,8 @@
     <string name="app_version">1.5</string>
     <string name="summary_support">Got any queries? We are happy to help!</string>
     <string name="title_send_feedback">Send Feedback</string>
-    <string name="url_faq">privacy-policy/</string>
-    <string name="privacy_policy">Privacy Policy</string>
-    <string name="url_privacy">privacy-policy/</string>
+    <string name="url_faq">Privacy Policy</string>
+    <string name="url_policy">Information not Distributed with other Vendors</string>
     <string name="title_terms">Terms &amp; Conditions</string>
     <string name="url_terms">terms-of-service/</string>
     <string name="title_version">Version</string>
@@ -83,6 +82,7 @@
     <string name="title_gallery_storage">Default Storage</string>
     <string name="title_new_notification_sound">New message notification</string>
     <string name="title_vibrate">Vibrate</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_channel</string>
     <string name="summary_vibrate">Vibrate on new notification</string>
     <string name="key_upload_over_wifi">key_upload_over_wifi</string>
     <string name="key_gallery_name">key_gallery_name</string>
@@ -96,4 +96,7 @@
     <string name="facebook_logout">Log Out</string>
     <string name="logout_info">Log out of Culturelle</string>
     <string name="sign_out">sign_out</string>
+    <string name="default_notification_channel_name">culturelle news</string>
+    <string name="msg_subscribed">subscribed</string>
+    <string name="icon">icon</string>
 </resources>

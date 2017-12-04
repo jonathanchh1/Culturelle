@@ -12,14 +12,20 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.os.Bundle;
+import android.preference.TwoStatePreference;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.jonat.capstonestage1.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import static com.example.jonat.capstonestage1.Fragments.GossipNewsFragment.LOG_TAG;
 
 public class SettingActivity extends AppCompatPreferenceActivity {
 
@@ -42,6 +48,7 @@ public class SettingActivity extends AppCompatPreferenceActivity {
 
     public static class MainPreferenceFragment extends PreferenceFragment {
 
+        private TwoStatePreference notification;
         /**
          * A preference value change listener that updates the preference's summary
          * to reflect its new value.
