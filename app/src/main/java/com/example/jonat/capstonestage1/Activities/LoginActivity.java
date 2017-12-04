@@ -124,8 +124,8 @@ public class LoginActivity extends AppCompatActivity {
 
         //write new user
         writeNewUser(user.getUid(), username, user.getEmail());
-
         //go to mainActivity
+
         startActivity(new Intent(LoginActivity.this, MainActivity.class));
         finish();
 

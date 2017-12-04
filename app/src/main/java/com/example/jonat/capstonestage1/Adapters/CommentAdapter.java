@@ -109,6 +109,8 @@ import static com.example.jonat.capstonestage1.Fragments.GossipNewsFragment.LOG_
                 Comment movedComment = dataSnapshot.getValue(Comment.class);
                 String commentKey = dataSnapshot.getKey();
 
+
+
                 // ...
             }
 

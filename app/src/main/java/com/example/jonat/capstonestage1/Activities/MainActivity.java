@@ -2,8 +2,10 @@ package com.example.jonat.capstonestage1.Activities;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -20,9 +22,11 @@ import android.os.Bundle;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.jonat.capstonestage1.Adapters.GossipNewsAdapter;
@@ -32,8 +36,6 @@ import com.example.jonat.capstonestage1.Fragments.GossipDetailFragment;
 import com.example.jonat.capstonestage1.Fragments.GossipNewsFragment;
 import com.example.jonat.capstonestage1.Fragments.NewsFragment;
 import com.example.jonat.capstonestage1.Fragments.TechFragment;
-import com.example.jonat.capstonestage1.Model.Comment;
-import com.example.jonat.capstonestage1.Model.User;
 import com.example.jonat.capstonestage1.R;
 import com.example.jonat.capstonestage1.Model.NewsFeed;
 import com.google.android.gms.appinvite.AppInvite;
@@ -46,10 +48,8 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, GossipNewsAdapter.Callbacks {
 
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             R.drawable.ic_computer_black_24dp
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_content);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setForegroundGravity(Gravity.CENTER);
+        centerToolbarTitle(toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -212,6 +215,20 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
     }
 
 
+    public static void centerToolbarTitle(@NonNull final Toolbar toolbar) {
+        final CharSequence title = toolbar.getTitle();
+        final ArrayList<View> outViews = new ArrayList<>(1);
+        toolbar.findViewsWithText(outViews, title, View.FIND_VIEWS_WITH_TEXT);
+        if (!outViews.isEmpty()) {
+            final TextView titleView = (TextView) outViews.get(0);
+
+            titleView.setGravity(Gravity.CENTER);
+            final Toolbar.LayoutParams layoutParams = (Toolbar.LayoutParams) titleView.getLayoutParams();
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            toolbar.requestLayout();
+            //also you can use titleView for changing font: titleView.setTypeface(Typeface);
+        }
+    }
     @Override
     protected void onActivityResult ( int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -281,6 +298,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         int id = item.getItemId();
 
         if(id == R.id.settings){
+            Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+            startActivity(intent);
             return true;
         }else if(id == android.R.id.home){
             mDrawlayout.openDrawer(GravityCompat.START);
@@ -334,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             fragmentManager.beginTransaction()
                     .replace(R.id.news_detail_container, fragment, GossipDetailActivity.ARG_NEWS)
                     .commit();
-        } else {
+        }else {
             Intent intent = new Intent(getApplicationContext(), GossipDetailActivity.class);
             intent.putExtra(GossipDetailActivity.ARG_NEWS, items);
             startActivity(intent);

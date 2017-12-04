@@ -35,13 +35,15 @@ import static com.example.jonat.capstonestage1.Fragments.GossipNewsFragment.LOG_
 public class CommentActivity extends AppCompatActivity implements View.OnClickListener {
     private DatabaseReference mCommentsReference;
     private FirebaseDatabase mFirebaseInstance;
-    private com.example.jonat.capstonestage1.Adapters.CommentAdapter mAdapter;
+    private CommentAdapter mAdapter;
     private ImageView userprofile;
     private TextView mAuthorView;
     private EditText mCommentField;
     private Button mCommentButton;
     private RecyclerView mCommentsRecycler;
     private GoogleSignInResult mGoogleSignResult;
+    private ValueEventListener mPostListener;
+    private DatabaseReference mPostReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
         setContentView(R.layout.activity_comment);
 
+
+
+
         // Initialize Database
         mFirebaseInstance = FirebaseDatabase.getInstance();
         // get reference to 'users' node
@@ -57,6 +62,9 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
         // store app title to 'app_title' node
         mFirebaseInstance.getReference("user_favorites").setValue("post_comments");
 
+        // Initialize Database
+        mPostReference = FirebaseDatabase.getInstance().getReference()
+                .child("user_favorites").child("post_comments");
         // Initialize Views
         userprofile = (ImageView) findViewById(R.id.post_author_photo);
         mAuthorView = (TextView) findViewById(R.id.post_author);
@@ -111,10 +119,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
-                NewsFeed items = dataSnapshot.getValue(NewsFeed.class);
+                Comment items = dataSnapshot.getValue(Comment.class);
                 // [START_EXCLUDE]
-                mAuthorView.setText(items.getAuthor());
+            //    mAuthorView.setText(items.getAuthor());
                 // [END_EXCLUDE]
+
             }
 
             @Override
@@ -127,8 +136,11 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                 // [END_EXCLUDE]
             }
         };
-        // [END post_value_event_listener];
-
+        // [END post_value_event_listener];/
+        mPostReference.addValueEventListener(postListener);
+        // [END post_value_event_listener]
+        // Keep copy of post listener so we can remove it when app stops
+        mPostListener = postListener;
         // Listen for comments
         mAdapter = new CommentAdapter(this, mCommentsReference);
         mCommentsRecycler.setAdapter(mAdapter);
@@ -136,7 +148,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onStop() {
-        super.onStop();
+    super.onStop();
 
         // Clean up comments listener
         mAdapter.cleanupListener();
@@ -163,9 +175,7 @@ public class CommentActivity extends AppCompatActivity implements View.OnClickLi
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Get user information
                         User user = dataSnapshot.getValue(User.class);
-                        String mAuthor =  user.getUsername();
-
-                        String authorName = mAuthor;
+                        String authorName = user.getUsername();
                         // Create new comment object
                         String commentText = mCommentField.getText().toString();
                         Comment comment = new Comment(uid, authorName, commentText);

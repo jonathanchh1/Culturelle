@@ -230,6 +230,7 @@ public class GossipNewsFragment extends Fragment implements LoaderManager.Loader
         }
 
     }
+
     private void parseResult(String result) {
         try {
             JSONObject response = new JSONObject(result);
@@ -250,23 +251,6 @@ public class GossipNewsFragment extends Fragment implements LoaderManager.Loader
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.main_menu, menu);
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return super.onOptionsItemSelected(item);
-
     }
 
     private void clearDataSet() {

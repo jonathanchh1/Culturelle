@@ -31,13 +31,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-
 /**
  * Created by jonat on 12/23/2016.
  */
@@ -46,25 +39,16 @@ public class GossipDetailFragment extends Fragment {
 
     public static final String LOG_TAG = GossipDetailFragment.class.getSimpleName();
     private NewsFeed items;
-    private ArrayList<NewsFeed> newsList;
-    private Toast mToast;
     View rootView;
     private MenuItem favorite;
     private LayoutInflater mLayoutInflater;
     ShareActionProvider mShareActionProvider;
     private DatabaseReference mDatabase;
-
-    @Bind(R.id.title_detail)
     TextView mTitle;
-    @Bind(R.id.author_detail)
     TextView mAuthor;
-    @Bind(R.id.detail_poster)
     ImageView thumbnail;
-    @Bind(R.id.descriptionm)
     TextView Description;
-    @Bind(R.id.published)
     TextView published;
-    @Bind(R.id.read_more_b)
     Button mbuttonList;
 
 
@@ -108,10 +92,14 @@ public class GossipDetailFragment extends Fragment {
                 items = intent.getParcelableExtra(GossipDetailActivity.ARG_NEWS);
             }
 
+            mTitle = (TextView) rootView.findViewById(R.id.title_detail);
+            mAuthor = (TextView) rootView.findViewById(R.id.author_detail);
+            Description = (TextView) rootView.findViewById(R.id.descriptionm);
+            published = (TextView) rootView.findViewById(R.id.published);
+            mbuttonList = (Button) rootView.findViewById(R.id.read_more_b);
+            thumbnail = (ImageView) rootView.findViewById(R.id.detail_poster);
+
             mDatabase = FirebaseDatabase.getInstance().getReference();
-
-            ButterKnife.bind(this, rootView);
-
             mTitle.setText(items.getTitle());
             mAuthor.setText(items.getAuthor());
             Description.setText(items.getDescription());
@@ -136,7 +124,6 @@ public class GossipDetailFragment extends Fragment {
             String posterUrl = items.getThumbnail();
             Picasso.with(getActivity()).load(posterUrl).into(thumbnail);
         }
-
 
     }
 
