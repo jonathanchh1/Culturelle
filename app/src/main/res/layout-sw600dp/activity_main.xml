@@ -53,7 +53,7 @@
 
             <fragment
                 android:id="@+id/fragment_news_list"
-                android:name="com.example.jonat.capstonestage1.Fragments.GossipNewsFragment"
+                android:name="com.example.jonat.culturelle.Fragments.GossipNewsFragment"
                 android:layout_marginTop="@dimen/margin_multi"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"

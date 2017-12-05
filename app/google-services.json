@@ -8,18 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:401983467090:android:01692276a600582c",
+        "mobilesdk_app_id": "1:401983467090:android:8b477b715101b161",
         "android_client_info": {
-          "package_name": "com.example.jonat.capstonestage1"
+          "package_name": "com.emi.jonat.culturelle"
         }
       },
       "oauth_client": [
         {
-          "client_id": "401983467090-q4g5p5r05cffj28cl67btn3ldodoic7n.apps.googleusercontent.com",
+          "client_id": "401983467090-85drvje3qvg2fred69abfa276qjr7kko.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.jonat.capstonestage1",
-            "certificate_hash": "00BD168FCC922FB8C98FD5461EF39294985EA92A"
+            "package_name": "com.emi.jonat.culturelle",
+            "certificate_hash": "00bd168fcc922fb8c98fd5461ef39294985ea92a"
           }
         },
         {

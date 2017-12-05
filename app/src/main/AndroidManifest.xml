@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.jonat.capstonestage1">
+    package="com.emi.jonat.culturelle">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -9,9 +9,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/large_culturelle_logo"
+        android:icon="@mipmap/normal_culturelle_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/large_culturelle_logo"
+        android:roundIcon="@mipmap/normal_culturelle_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.RegisterActivity">
@@ -37,7 +37,7 @@
 
         <provider
             android:name=".Data.ArticlesProvider"
-            android:authorities="com.example.jonat.capstonestage1.Data"
+            android:authorities="com.emi.jonat.culturelle.Data"
             android:exported="true" />
 
         <!--- list(collection) FCM messaging -->
