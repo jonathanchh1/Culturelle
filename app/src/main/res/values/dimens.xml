@@ -2,9 +2,6 @@
 <resources>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="profile_size">100dp</dimen>
-    <dimen name="margin_profile_top">20dp</dimen>
-    <dimen name="margin_profile_bottom">20dp</dimen>
     <dimen name="article_titles">12sp</dimen>
     <dimen name="logo">100dp</dimen>
     <dimen name="margin_space">10dp</dimen>
@@ -19,7 +16,7 @@
     <dimen name="nav_header_height">222dp</dimen>
     <dimen name="nav_name">15dp</dimen>
     <dimen name="card_height">304dp</dimen>
-    <dimen name="text_title">40dp</dimen>
+    <dimen name="text_title">50dp</dimen>
     <dimen name="image_view_height">205dp</dimen>
     <dimen name="image_button_size">48dp</dimen>
     <dimen name="article_subheading">16sp</dimen>
@@ -31,8 +28,8 @@
     <dimen name="poster_height_for_detail">180dp</dimen>
     <dimen name="poster_padding_right">16dp</dimen>
     <dimen name="poster_vertical_padding">16dp</dimen>
-    <dimen name="detail_title_left_padding">4dp</dimen>
-    <dimen name="detail_title_bottom_margin">4dp</dimen>
+    <dimen name="detail_title_left_padding">8dp</dimen>
+    <dimen name="detail_title_bottom_margin">8dp</dimen>
     <dimen name="button_vertical_margin">16dp</dimen>
     <dimen name="date_vertical_padding">16dp</dimen>
     <dimen name="movie_overview_padding_top">16dp</dimen>
@@ -46,7 +43,11 @@
     <dimen name="icon">30dp</dimen>
     <dimen name="loginm">20dp</dimen>
     <dimen name="passcode">10dp</dimen>
+    <dimen name="tryconnect">180dp</dimen>
     <dimen name="widget">4dp</dimen>
+    <dimen name="titlesize">20sp</dimen>
+    <dimen name="descrip">18sp</dimen>
+    <dimen name="title_detail">15sp</dimen>
 
 
 </resources>

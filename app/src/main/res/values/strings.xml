@@ -18,10 +18,8 @@
     <string name="mAuth_failed">Authentication failed</string>
     <string name="createUserEmail">createUserWithEmail:onComplete</string>
     <string name="btn_sign_out">Sign Out</string>
-    <string name="profilename">Profile</string>
     <string name="Favorites">Favorites</string>
     <string name="settings">Settings</string>
-    <string name="recommendations">Recommendations</string>
     <string name="btn_link_to_register">Not a member? Get registered now!</string>
     <string name="btn_link_to_login">Already registered. Login Me!</string>
     <string name="minimum_password">Password too short, enter minimum 6 characters!</string>
@@ -54,9 +52,8 @@
     <string name="invitation_title">Read about Culturelle</string>
     <string name="invite">invite</string>
     <string name="body">comment</string>
-    <string name="full_name">jane doe</string>
     <string name="name">Name</string>
-    <string name="unavailable">no connection</string>
+    <string name="unavailable">no connection available</string>
 
 
     <string name="pref_title_ringtone">Ringtone</string>
@@ -70,7 +67,7 @@
     <string name="summary_choose_ringtone">Choose notification sound</string>
     <string name="pref_header_about">About</string>
     <string name="summary_about">This App offers information about News, Games, Tech and Celeb News for Social Media fanatics! Thanks for Download. Enjoy!</string>
-    <string name="app_version">1.5</string>
+    <string name="app_version">2.0</string>
     <string name="summary_support">Got any queries? We are happy to help!</string>
     <string name="title_send_feedback">Send Feedback</string>
     <string name="url_faq">Privacy Policy</string>
@@ -93,10 +90,35 @@
     <string name="title_activity_comments">Comments</string>
     <string name="action_refresh">Reload</string>
     <string name="loading">loading</string>
+    <dimen name="empty_height">500dp</dimen>
     <string name="facebook_logout">Log Out</string>
     <string name="logout_info">Log out of Culturelle</string>
     <string name="sign_out">sign_out</string>
     <string name="default_notification_channel_name">culturelle news</string>
-    <string name="msg_subscribed">subscribed</string>
     <string name="icon">icon</string>
+    <string name="btn_retry">Try Again</string>
+    <string name="sort_by">Gossip</string>
+    <string name="buzz">BuzzFeed</string>
+    <string name="entertainment">Entertainment</string>
+    <string name="ladbible">The Lad Bible</string>
+    <string name="daily">Daily News</string>
+    <string name="mashable">Mashable News</string>
+    <string name="abc">ABC News</string>
+    <string name="aftenposten">Aftenposten</string>
+    <string name="ansa">Ansa News</string>
+    <string name="al_jazer">Al Jazeer News</string>
+    <string name="bbc">BBC News</string>
+    <string name="mtv">MTV News</string>
+    <string name="national">National</string>
+    <string name="engadget">Engadget</string>
+    <string name="techcrunch">TechCrunch</string>
+    <string name="crypto">Crypto Coin News</string>
+    <string name="recode">Recode</string>
+    <string name="theverge">The Verge</string>
+    <string name="wired">Wired</string>
+    <string name="ign">IGN News</string>
+    <string name="polygon">Polygon</string>
+    <string name="noconnection">there\'s no network connection.</string>
 </resources>
+
+

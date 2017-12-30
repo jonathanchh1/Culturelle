@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".Activities.MainActivity">
+
+    <item
+        android:icon="@drawable/ic_sort_black_24dp"
+        android:title="@string/sort_by"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group
+                android:id="@+id/menu_sort_by"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/sort_by_engadget"
+                    android:checked="true"
+                    android:title="@string/engadget" />
+                <item
+                    android:id="@+id/sort_by_techcrunch"
+                    android:title="@string/techcrunch" />
+
+                <item
+                    android:id="@+id/sort_by_crypto"
+                    android:title="@string/crypto" />
+                <item
+                    android:id="@+id/sort_by_recode"
+                    android:title="@string/recode" />
+                <item
+                    android:id="@+id/sort_by_verge"
+                    android:title="@string/theverge" />
+                <item
+                    android:id="@+id/sort_by_wired"
+                    android:title="@string/wired" />
+            </group>
+        </menu>
+    </item>
+</menu>

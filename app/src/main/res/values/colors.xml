@@ -11,6 +11,7 @@
     <color name="colorlight">#f7a4d5</color>
     <color name="text_color_detail">@android:color/black</color>
     <color name="text_background">@android:color/black</color>
+    <color name="shadow">#0c000000</color>
 
     <!-- for swipe refresh layout -->
     <color name="swipe_color_1">#F8BBD0</color>

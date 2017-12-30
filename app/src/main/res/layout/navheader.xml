@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="@mipmap/large_culturelle_logo"
-    android:backgroundTint="@color/colorlight"
-    android:orientation="vertical"
-    android:padding="@dimen/keyline">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="@dimen/nav_header_height"
+android:background="@drawable/a"
+android:orientation="vertical"
+android:padding="@dimen/keyline">
 
-        <TextView
-            android:id="@+id/name_profile"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="70dp"
-            android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_title"
-            android:text="@string/app_name"/>
-</RelativeLayout>
+<TextView
+    android:id="@+id/name_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="70dp"
+    android:textAlignment="center"
+    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+    android:textColor="@color/white"
+    android:textSize="@dimen/text_title"
+    android:text="@string/app_name"/>
+</LinearLayout>
